@@ -1,0 +1,127 @@
+ACCEL BUSINESS · SAATHI · BUNDLES AND RULES
+(Prototype knowledge base for the Airtel SYNC 2026 case "Project Udyam Digital". Accel Telecom is a fictional
+operator and all data is synthetic. Exact bundles and prices always come from the price_bundle tool; this document
+explains them.)
+
+HOW PRICES WORK
+- One monthly price for the whole bundle, on one bill, with one support number.
+- Prices shown are the catalogue price for the committed plan length. GST is extra.
+- One-time setup fees apply only to some items (for example failover router, POS, CCTV, leased line). They are
+  shown separately on the quote.
+- Plan length = the longest minimum term among the items: 6 months for 5G AirFiber, 12 months for fibre and most
+  services, 24 months for leased line 100 Mbps, SD-WAN, managed firewall and machine IoT. Business postpaid lines
+  have a 1-month minimum.
+- Installation time = the slowest item in the bundle: 5G AirFiber about 2 days, business fibre about 5 days
+  (1 Gbps about 7), leased line about 21–30 days, SD-WAN about 14 days, managed firewall about 10 days.
+
+THE FOUR BUNDLES (who each is for and how it is sold; the exact contents, quantities, prices and worked examples are
+in the generated section right after this one)
+
+1) DUKAAN DIGITAL · for micro retail and services (kirana, salon, pharmacy, bakery, boutique, optician)
+   A business connection (fibre, or plug-and-play 5G AirFiber where fibre doesn't reach) and business mobile lines.
+   Popular add-ons: billing (Cloud POS), CCTV, secure Wi-Fi with a guest network, a website, WhatsApp Business API.
+   Sold mainly self-serve on WhatsApp, with local partners helping in-store.
+
+2) OFFICE PRO · for professional offices (clinic, diagnostic lab, CA firm, law office, coaching centre, agency)
+   Fibre sized to the team, business lines, cloud email, device security and cloud backup, with 4G/5G failover for
+   bigger teams or anyone who needs uptime. Add-ons: cloud telephony, static IP, SMS packs, toll-free.
+
+3) CHAIN CONNECT · for small multi-site businesses (restaurant, pharmacy, apparel and gym chains)
+   The same kit at every site (connection, failover, secure Wi-Fi, and billing for retail and food), plus business
+   lines and a toll-free number. Optional Managed SD-WAN and CCTV. A specialist joins after Saathi qualifies the need.
+
+4) FACTORY ASSURED · for small manufacturers (auto parts, textiles, packaging, food processing)
+   A leased line with an uptime SLA and a managed firewall (fibre with failover instead when a leased line isn't
+   possible), business lines and cloud email. Machine-monitoring sensors when they want to track machines.
+   Field-led sale (site survey), with Saathi doing the quote, KYC and tracking.
+
+=== BEGIN GENERATED: BUNDLE SIZING RULES AND EXAMPLES ===
+(Written by _build/gen_kit.py from price_bundle's THRESHOLDS, SIZING and product catalogue. Do not edit here:
+change _build/price_bundle.js and rebuild. A test fails if this section and the pricing code differ.)
+
+BUNDLE SIZING RULES (what price_bundle puts in each bundle; prices are the catalogue's monthly floor price)
+
+DUKAAN DIGITAL · micro retail and services
+- Connection: Biz Fibre 100 (₹999/month); Biz 5G AirFiber 100 (₹899/month) where fibre isn't available.
+- Business lines: Business Postpaid 299 (₹299 per line): 1 for a team of up to 2 people, otherwise 2.
+- Only when asked: Cloud POS & Billing (₹599/month, ₹2,500 setup) per counter (1 per site unless told); Cloud CCTV (₹199/month, ₹1,800 setup) per camera (2 unless told); Secure Wi-Fi with Guest Network (₹399/month, ₹1,000 setup); WhatsApp Business API Starter (₹999/month); Website + Domain Starter (₹299/month); Business SMS 10k (₹1,500/month); cloud email (one user per person, at least 1); endpoint security (one device per person, up to 3); Backup 4G/5G Failover (₹499/month, ₹1,500 setup).
+
+OFFICE PRO · professional offices
+- Connection: Biz Fibre 100 (₹999/month) for teams of up to 5 people, Biz Fibre 300 (₹1,499/month) for bigger teams; Biz Fibre 1G when they ask for top speed and qualify; Biz 5G AirFiber 100 where fibre isn't available.
+- Backup 4G/5G Failover (₹499/month, ₹1,500 setup): included for teams of 8 or more; for smaller teams only when asked.
+- Business lines: Business Postpaid 599 (₹599 per line): one per 5 people, rounded, at least 2 and at most 8.
+- Cloud Email & Office Suite (₹125 per user): 60% of the team, rounded up, at least 3 users.
+- Endpoint Security (₹99 per device): 40% of the team, rounded, at least 2 devices.
+- Cloud Backup 1 TB (₹499/month): one.
+- When asked: Cloud Telephony / SIP (₹1,000/month, ₹2,000 setup) per channel, one channel per 6 people, 2 to 3 channels; Static IP (₹200/month); Business SMS 10k (₹1,500/month); Toll-free Number (₹1,500/month, ₹1,000 setup).
+
+CHAIN CONNECT · businesses with 3 or more sites
+- At every site: Biz Fibre 100 (₹999/month), or Biz Fibre 300 (₹1,499/month) when there are more than 15 people per site (Biz 5G AirFiber 100 where fibre isn't available); Backup 4G/5G Failover (₹499/month, ₹1,500 setup); Secure Wi-Fi with Guest Network (₹399/month, ₹1,000 setup); and for retail and food Cloud POS & Billing (₹599/month, ₹2,500 setup), 1 counter per site unless told.
+- Business lines: Business Postpaid 599 (₹599 per line): one per 18 people, rounded, at least 2 and at most 10.
+- One Toll-free Number (₹1,500/month, ₹1,000 setup) (needs an active GSTIN).
+- When asked: Cloud CCTV (₹199/month, ₹1,800 setup) per camera, 1.5 cameras per site, rounded; Managed SD-WAN (₹2,500/month, ₹5,000 setup) per site; cloud email (15% of the team, at least 3 users); Fleet Tracker (₹199/month, ₹1,500 setup) per vehicle (4 unless told).
+
+FACTORY ASSURED · small manufacturers
+- Connection: Internet Leased Line 20 (₹8,000/month, ₹10,000 setup) for businesses with an active GSTIN and 10+ people; otherwise Biz Fibre 1G or Biz Fibre 300, with Backup 4G/5G Failover. Internet Leased Line 100 (₹25,000/month, ₹15,000 setup) when they ask for speed and have 25+ people.
+- Managed Firewall (₹1,999/month, ₹4,000 setup): one, where allowed (an active GSTIN and 10+ people).
+- Business lines: Business Postpaid 599 (₹599 per line): one per 20 people, rounded, at least 2 and at most 10.
+- Cloud email: 13% of the team, rounded, at least 3 users.
+- When asked: Machine Monitoring IoT (₹149/month, ₹3,000 setup) per sensor (10 unless told); endpoint security (10% of the team, at least 3 devices); Cloud CCTV (5 cameras unless told); fleet trackers; static IP.
+
+WHEN NOBODY SAYS HOW BIG THE TEAM IS
+- price_bundle assumes 2 people for a shop, 8 for an office, 40 for a chain and 40 for a factory. (GSTIN-first onboarding instead quotes the smallest team of the segment and says so.)
+
+WORKED EXAMPLES (priced by price_bundle when this section was written)
+- Kirana in Lucknow, 2 people, no GSTIN, no fibre on the street: Dukaan Digital, ₹1,198/month, 6-month plan, live in about 2 days. Items: Biz 5G AirFiber 100, Business Postpaid 299.
+- Kirana, 3 people, wants billing: Dukaan Digital, ₹2,196/month, ₹2,500 one-time, 12-month plan, live in about 5 days. Items: Biz Fibre 100, Business Postpaid 299 ×2, Cloud POS & Billing.
+- Diagnostic lab in Delhi, 16 people: Office Pro, ₹6,138/month, ₹1,500 one-time, 12-month plan, live in about 5 days. Items: Biz Fibre 300, Backup 4G/5G Failover, Business Postpaid 599 ×3, Cloud Email & Office Suite ×10, Endpoint Security ×6, Cloud Backup 1 TB.
+- 8 restaurants in Mumbai, 71 people: Chain Connect, ₹23,864/month, ₹41,000 one-time, 12-month plan, live in about 5 days. Items: Biz Fibre 100 ×8, Backup 4G/5G Failover ×8, Secure Wi-Fi with Guest Network ×8, Cloud POS & Billing ×8, Business Postpaid 599 ×4, Toll-free Number.
+- Textile unit in Surat, 85 people, machine monitoring: Factory Assured, ₹15,260/month, ₹44,000 one-time, 24-month plan, live in about 21 days. Items: Internet Leased Line 20, Managed Firewall, Business Postpaid 599 ×4, Cloud Email & Office Suite ×11, Machine Monitoring IoT ×10.
+=== END GENERATED: BUNDLE SIZING RULES AND EXAMPLES ===
+
+=== BEGIN GENERATED: ACTIVATION PROMISE ===
+(Written by _build/gen_kit.py from price_bundle's GUARANTEE_SCOPE and its firm activation days. Do not edit
+here: change _build/price_bundle.js or the firm-date rule in _build/gen_kit.py and rebuild. A test fails if this
+section and the pricing code differ.)
+
+ACTIVATION GUARANTEE (every quote shows exactly one; Saathi repeats the quote's promise and never another)
+- Connected means the internet connection and the business SIMs work. Other items (CCTV, a leased line, software)
+  follow the install time shown on the quote.
+- If we miss the promised time, month one is free: the whole first monthly bill is credited automatically.
+- The guarantee is fixed when the quote is made, and the order tracker counts down to exactly that promise.
+
+WHO GETS "CONNECTED IN 72 HOURS, GUARANTEED" (all of these, checked when the quote is made)
+- A tier-1 city: Delhi, New Delhi, Mumbai, Bombay, Bengaluru, Bangalore, Chennai, Madras, Hyderabad, Kolkata, Calcutta, Pune and Ahmedabad.
+- Up to 10 people, on one site.
+- The connection is Biz Fibre 100, Biz Fibre 300 or Biz 5G AirFiber 100.
+- 5G AirFiber covers the address: it connects the business first if the fibre install takes longer.
+
+EVERYONE ELSE: A FIRM NUMBER OF DAYS, WITH THE SAME GUARANTEE
+- The day by which 9 in 10 past orders with the same city tier and connection were live, never
+  sooner than the catalogue's install time.
+- Tier-1 city: 7 days on business fibre up to 300 Mbps; 7 days on 1 Gbps fibre; 8 days on 5G AirFiber; 21 days on leased line.
+- Tier-2 city: 10 days on business fibre up to 300 Mbps; 9 days on 1 Gbps fibre; 11 days on 5G AirFiber; 21 days on leased line.
+
+WORKED EXAMPLES (decided by price_bundle when this section was written)
+- Kirana in Delhi, 3 people: Connected in 72 hours, guaranteed, or month one is free.
+- Kirana in Delhi, 3 people, where a check shows no AirFiber coverage: Connected within 7 days of your order, guaranteed, or month one is free (5G AirFiber, the 72-hour bridge, doesn't cover the address).
+- Kirana in Lucknow, 3 people: Connected within 10 days of your order, guaranteed, or month one is free (the 72-hour guarantee covers tier-1 cities only).
+- Diagnostic lab in Delhi, 16 people: Connected within 7 days of your order, guaranteed, or month one is free (the 72-hour guarantee covers businesses of up to 10 people).
+- 8 restaurants in Mumbai, 71 people: Connected within 7 days of your order, guaranteed, or month one is free (the 72-hour guarantee covers businesses of up to 10 people; the 72-hour guarantee covers single-site businesses).
+- Textile unit in Surat, 85 people: Connected within 21 days of your order, guaranteed, or month one is free (the 72-hour guarantee covers tier-1 cities only; the 72-hour guarantee covers businesses of up to 10 people; Internet Leased Line 20 needs a site survey before installation).
+=== END GENERATED: ACTIVATION PROMISE ===
+
+ELIGIBILITY RULES (enforced by the pricing tool)
+- Needs an active GSTIN: Biz Fibre 1G, leased lines, Managed SD-WAN, Cloud Telephony, Toll-free Number,
+  Business SMS, WhatsApp Business API, Managed Firewall, Machine Monitoring IoT.
+- Biz Fibre 1G is sold only in tier-1 cities (Delhi, Mumbai, Bengaluru, Chennai, Hyderabad, Kolkata, Pune, Ahmedabad).
+- Minimum size: Biz Fibre 1G 5+ employees; Leased Line 20 and Managed Firewall and Machine IoT 10+; Leased Line 100
+  25+; SD-WAN 10+ employees and 3+ sites; Cloud Telephony 3+.
+- Must be bought with a connection: failover (needs fibre or leased line), static IP (needs fibre), secure Wi-Fi,
+  CCTV, cloud telephony, SD-WAN, managed firewall.
+- If something isn't allowed, Saathi says why in one line and offers what is possible instead.
+
+NOT SURE / TOO EXPENSIVE?
+- Tell Saathi your monthly budget: it removes optional items first, can switch fibre to 5G AirFiber, and tells you
+  exactly what changed.
+- You can add or remove any item and get a new price instantly.

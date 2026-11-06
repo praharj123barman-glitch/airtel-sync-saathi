@@ -1,0 +1,9 @@
+# Secrets: the Voiceflow API key lives only here (see START_HERE.md, "Build by API").
+.env
+.env.*
+
+# Local tool output
+node_modules/
+.stryker-tmp/
+.ruff_cache/
+reports/

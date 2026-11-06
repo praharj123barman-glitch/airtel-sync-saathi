@@ -1,0 +1,48 @@
+ACCEL BUSINESS · SAATHI · PRIVACY NOTICE (DPDP Act, 2023)
+(Prototype text for the Airtel SYNC 2026 case. Accel Telecom is fictional.)
+
+CONSENT: THREE SEPARATE QUESTIONS (shown before any lookup, in your language)
+Saathi asks about three purposes separately. You answer yes or no to each one; nothing is ticked for you, and
+saying no to one changes nothing about the others.
+1. Registry lookup: we look up your GSTIN and Udyam number in the government registries, to find your business
+   and prepare your plan. Without it, Saathi asks a few questions instead.
+2. KYC verification: to activate a connection we verify your business. We read the documents you share (like a
+   photo of your GST certificate) and check the signatory's ID. Without it we can quote, but we can't activate.
+3. Offers on WhatsApp (optional): offers and tips about Accel products. Saying no changes nothing else.
+The exact text in English, Hindi and Kannada is in the consent_manager tool (_build/consent_rules.js). Each
+answer is recorded with the time and the version of the text you saw.
+
+WHAT WE COLLECT, AND WHY (purpose limitation)
+- Business details you type in the chat (business type, city, team size, needs): to recommend a bundle and price it.
+- Name, mobile number, preferred call time: only if you ask for a callback or place an order.
+- GSTIN and Udyam number: only after you say yes to registry lookup.
+- Signatory ID (via DigiLocker) and e-Sign: only after you say yes to KYC verification and accept a quote.
+- A photo of your GST certificate: only if the registry lookup didn't work and you say yes to KYC verification.
+  The photo is read on your own phone; only the fields you confirm are used.
+- Offers: only if you say yes to offers on WhatsApp. We never use your GSTIN, ID or documents for marketing or to
+  train AI.
+
+DATA MINIMISATION
+- Lookup before upload: if your GSTIN and Udyam verify in the registries, we don't collect certificates.
+- We store the verified fields, not the document images.
+- An address proof is asked for only when it is genuinely needed.
+
+MASKING AND ACCESS
+- GSTIN, ID and phone numbers are shown masked in the chat and in logs (for example 07PUT•••••••1Z9).
+- Personal data is removed before any text is sent to an AI model.
+- Partners and field staff see only the leads assigned to them.
+
+RETENTION
+- Document images: deleted 30 days after activation. (In this prototype the certificate photo never leaves the
+  owner's device at all.)
+- The KYC record: kept only as long as telecom KYC rules require, then deleted.
+- Chat transcripts of people who didn't buy: deleted after 90 days.
+
+YOUR RIGHTS
+- See what we hold, correct it, or ask us to delete it.
+- Withdraw any of the three consents at any time, as easily as you gave it: say "withdraw consent" (or "stop
+  offers", "don't check my documents") in the chat, or use the Withdraw button on the consent screen. Withdrawing
+  registry lookup stops new lookups; withdrawing KYC verification stops verification and deletes shared documents
+  (a connection can't be activated without it); withdrawing offers stops offers only. An order that is already
+  active may need some records kept by law.
+- Complaints: ask Saathi to connect you with the grievance officer.

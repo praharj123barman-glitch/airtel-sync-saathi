@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Saathi screens</title>
+<style>
+  @font-face { font-family: "PoppinsL"; src: url("../fonts/Poppins-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "PoppinsL"; src: url("../fonts/Poppins-Medium.ttf"); font-weight: 500; }
+  @font-face { font-family: "PoppinsL"; src: url("../fonts/Poppins-SemiBold.ttf"); font-weight: 600; }
+  @font-face { font-family: "PoppinsL"; src: url("../fonts/Poppins-Bold.ttf"); font-weight: 700; }
+  :root {
+    --red: #E40000; --red-d: #B80000; --ink: #1A1A1A; --muted: #5F6368; --line: #E7E7EA;
+    --tint: #FDECEC; --panel: #F4F5F7; --ok: #0F7B3F; --ok-bg: #E7F5EC; --warn: #B45309; --warn-bg: #FEF3E2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: transparent; font-family: "PoppinsL", "Nirmala UI", sans-serif; color: var(--ink); padding: 20px; display: flex; gap: 28px; }
+  .phone { width: 280px; height: 580px; border-radius: 38px; background: #111; padding: 9px; box-shadow: 0 10px 28px rgba(0,0,0,.18); position: relative; }
+  .screen { width: 100%; height: 100%; border-radius: 30px; background: #fff; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+  .notch { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 84px; height: 20px; background: #111; border-radius: 12px; z-index: 5; }
+  .status { height: 30px; display: flex; justify-content: space-between; align-items: center; padding: 6px 20px 0; font-size: 10px; font-weight: 600; }
+  .bar { display: flex; align-items: center; gap: 8px; padding: 6px 12px 9px; border-bottom: 1px solid var(--line); }
+  .bar.red { background: var(--red); color: #fff; border-bottom: none; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: #fff; color: var(--red); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+  .bar .t { font-size: 13px; font-weight: 600; line-height: 1.1; }
+  .bar .s { font-size: 9.5px; opacity: .85; }
+  .pill { margin-left: auto; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 99px; background: rgba(255,255,255,.2); }
+  .body { flex: 1; padding: 10px 11px; display: flex; flex-direction: column; gap: 7px; overflow: hidden; }
+  .chat { background: #F7F1EC; }
+  .msg { max-width: 86%; font-size: 11.5px; line-height: 1.38; padding: 7px 9px; border-radius: 12px; }
+  .bot { background: #fff; border-top-left-radius: 3px; box-shadow: 0 1px 1px rgba(0,0,0,.06); }
+  .me { align-self: flex-end; background: #FFE3E3; border-top-right-radius: 3px; }
+  .card { background: #fff; border: 1.5px solid var(--red); border-radius: 12px; padding: 9px 10px; font-size: 11px; box-shadow: 0 2px 6px rgba(228,0,0,.10); }
+  .card h4 { font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; }
+  .card h4 span { color: var(--red); font-size: 14px; }
+  .card ul { list-style: none; margin-top: 5px; display: grid; gap: 2px; }
+  .card li::before { content: "•"; color: var(--red); margin-right: 5px; }
+  .why { margin-top: 6px; font-size: 10.5px; background: var(--tint); border-radius: 8px; padding: 5px 7px; line-height: 1.35; }
+  .chips { display: flex; gap: 5px; flex-wrap: wrap; }
+  .chip { font-size: 10.5px; font-weight: 600; color: var(--red); border: 1.3px solid var(--red); background: #fff; border-radius: 99px; padding: 3px 9px; }
+  .input { margin: 0 10px 12px; display: flex; align-items: center; gap: 7px; background: #fff; border-radius: 99px; padding: 7px 10px; font-size: 11px; color: var(--muted); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .mic { margin-left: auto; width: 26px; height: 26px; border-radius: 50%; background: var(--red); display: grid; place-items: center; }
+  h3 { font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .sub { font-size: 10.5px; color: var(--muted); }
+  .total { background: var(--ink); color: #fff; border-radius: 14px; padding: 10px 12px; }
+  .total .big { font-size: 26px; font-weight: 700; line-height: 1.1; }
+  .total .big small { font-size: 12px; font-weight: 500; opacity: .8; }
+  .total .meta { font-size: 10px; opacity: .8; margin-top: 2px; }
+  .seg { display: flex; background: var(--panel); border-radius: 99px; padding: 3px; font-size: 10.5px; font-weight: 600; }
+  .seg div { flex: 1; text-align: center; padding: 4px 0; border-radius: 99px; color: var(--muted); }
+  .seg .on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+  .row { display: flex; align-items: center; gap: 8px; font-size: 11px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+  .row .n { flex: 1; line-height: 1.25; }
+  .row .n small { display: block; font-size: 9.5px; color: var(--muted); }
+  .row .p { font-weight: 600; }
+  .tg { width: 28px; height: 16px; border-radius: 99px; background: var(--red); position: relative; flex: none; }
+  .tg::after { content: ""; position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
+  .tg.off { background: #CFD2D6; }
+  .tg.off::after { right: auto; left: 2px; }
+  .lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+  .cta { background: var(--red); color: #fff; font-weight: 600; font-size: 12.5px; text-align: center; padding: 9px; border-radius: 12px; }
+  .consent { background: var(--tint); border-radius: 12px; padding: 8px 10px; font-size: 10.5px; line-height: 1.4; }
+  .consent b { display: block; font-size: 11.5px; margin-bottom: 2px; }
+  .agree { display: flex; align-items: center; gap: 6px; margin-top: 5px; font-weight: 600; font-size: 10.5px; }
+  .box { width: 14px; height: 14px; border-radius: 4px; background: var(--red); display: grid; place-items: center; }
+  .chk { display: flex; gap: 8px; align-items: flex-start; padding: 7px 8px; border-radius: 10px; font-size: 10.5px; line-height: 1.35; border: 1px solid var(--line); }
+  .chk .ic { flex: none; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; margin-top: 1px; }
+  .chk.ok .ic { background: var(--ok-bg); }
+  .chk.bad { border-color: #F5C08A; background: var(--warn-bg); }
+  .chk.bad .ic { background: #FDE1BD; }
+  .chk b { font-weight: 600; }
+  .chk small { display: block; color: var(--muted); font-size: 9.5px; }
+  .fix { margin-top: 4px; display: inline-block; font-size: 10px; font-weight: 600; color: #fff; background: var(--warn); border-radius: 99px; padding: 2px 8px; }
+  .steps { position: relative; padding-left: 4px; }
+  .st { display: flex; gap: 9px; position: relative; padding-bottom: 11px; }
+  .st::before { content: ""; position: absolute; left: 8px; top: 18px; bottom: -1px; width: 2px; background: var(--line); }
+  .st.done::before { background: var(--red); }
+  .st:last-child::before { display: none; }
+  .dot { flex: none; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #CFD2D6; background: #fff; display: grid; place-items: center; z-index: 1; }
+  .st.done .dot { background: var(--red); border-color: var(--red); }
+  .st.now .dot { border-color: var(--red); }
+  .st.now .dot::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+  .st .tx { font-size: 11px; line-height: 1.3; font-weight: 600; }
+  .st .tx small { display: block; font-weight: 400; color: var(--muted); font-size: 9.5px; }
+  .st.next .tx { color: var(--muted); }
+  .now-card { margin-top: 4px; background: var(--panel); border-radius: 10px; padding: 6px 8px; font-weight: 400; font-size: 10px; color: var(--ink); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .now-card span { color: var(--red); font-weight: 600; }
+  .ontrack { font-size: 10px; font-weight: 600; color: var(--ok); background: var(--ok-bg); padding: 3px 8px; border-radius: 99px; }
+  .wa { display: flex; align-items: center; gap: 7px; font-size: 10.5px; background: var(--ok-bg); color: var(--ok); border-radius: 10px; padding: 7px 9px; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- 1. ADVISOR (Hindi, WhatsApp-style) -->
+<div class="phone" id="p1"><div class="notch"></div><div class="screen">
+  <div class="bar red" style="padding-top:34px">
+    <div class="avatar">S</div>
+    <div><div class="t">Saathi</div><div class="s">Accel Business · online</div></div>
+    <div class="pill">हिंदी ▾</div>
+  </div>
+  <div class="body chat">
+    <div class="msg bot">नमस्ते! मैं Saathi हूँ। अपने बिज़नेस के बारे में बताइए।</div>
+    <div class="msg me">दिल्ली में डायग्नोस्टिक लैब, 16 लोग, अभी मोबाइल हॉटस्पॉट</div>
+    <div class="card">
+      <h4>Office Pro <span>₹6,138/माह</span></h4>
+      <ul>
+        <li>300 Mbps फाइबर + 4G/5G बैकअप</li>
+        <li>3 बिज़नेस सिम · 10 क्लाउड ईमेल</li>
+        <li>1 TB बैकअप · 6 डिवाइस सिक्योरिटी</li>
+      </ul>
+      <div class="why"><b>क्यों?</b> रिपोर्ट रोज़ ऑनलाइन जाती हैं: ऑटो-बैकअप से नेट कभी नहीं रुकेगा।</div>
+    </div>
+    <div class="chips"><div class="chip">कोट देखें</div><div class="chip">बदलें</div><div class="chip">कॉल बैक</div></div>
+    <div class="msg bot">या बोलकर पूछिए, मैं 10 भाषाओं में बात करता हूँ।</div>
+  </div>
+  <div class="chat" style="padding-top:2px"><div class="input">बोलें या लिखें…<div class="mic"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></div></div></div>
+</div></div>
+
+<!-- 2. QUOTE & CHECKOUT -->
+<div class="phone" id="p2"><div class="notch"></div><div class="screen">
+  <div class="status"><span>11:06</span><span>5G ▮▮▮</span></div>
+  <div class="body" style="gap:8px; padding-top:6px">
+    <div><h3>Your Office Pro quote</h3><div class="sub">Metro Diagnostics Pvt Ltd · Delhi</div></div>
+    <div class="total">
+      <div class="big">₹6,138 <small>/month</small></div>
+      <div class="meta">One bill · ₹1,500 one-time · GST extra · live in ~5 days</div>
+    </div>
+    <div class="seg"><div class="on">12 months</div><div>24 months</div></div>
+    <div>
+      <div class="row"><div class="n">Biz Fibre 300<small>300 Mbps, unlimited</small></div><div class="p">₹1,499</div><div class="tg"></div></div>
+      <div class="row"><div class="n">4G/5G failover<small>auto-switch if fibre drops</small></div><div class="p">₹499</div><div class="tg"></div></div>
+      <div class="row"><div class="n">Business Postpaid 599 × 3</div><div class="p">₹1,797</div><div class="tg"></div></div>
+      <div class="row"><div class="n">Cloud email × 10</div><div class="p">₹1,250</div><div class="tg"></div></div>
+      <div class="row"><div class="n">Security × 6 · Backup 1 TB</div><div class="p">₹1,093</div><div class="tg"></div></div>
+    </div>
+    <div class="lbl">Add-ons</div>
+    <div class="row" style="padding-top:0"><div class="n">Static IP</div><div class="p" style="color:var(--muted)">+₹200</div><div class="tg off"></div></div>
+    <div class="row"><div class="n">Cloud telephony × 3</div><div class="p" style="color:var(--muted)">+₹3,000</div><div class="tg off"></div></div>
+    <div class="cta">Accept quote →</div>
+  </div>
+</div></div>
+
+<!-- 3. SMART KYC -->
+<div class="phone" id="p3"><div class="notch"></div><div class="screen">
+  <div class="status"><span>11:09</span><span>5G ▮▮▮</span></div>
+  <div class="body" style="gap:7px; padding-top:6px">
+    <div><h3>Verify your business</h3><div class="sub">Step 3 of 4 · about 2 minutes</div></div>
+    <div class="consent">
+      <b>Your data, one purpose</b>
+      Used only to verify this order. Never for marketing. Images deleted 30 days after activation.
+      <div class="agree"><div class="box"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="M4 12l5 5L20 6"/></svg></div>I agree · Manage consent</div>
+    </div>
+    <div class="chk ok"><div class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0F7B3F" stroke-width="4"><path d="M4 12l5 5L20 6"/></svg></div><div><b>GSTIN 07PUT•••••1Z9 · Active</b><small>From GST registry: no certificate upload</small></div></div>
+    <div class="chk bad"><div class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="4" stroke-linecap="round"><path d="M12 6v7M12 18h.01"/></svg></div><div><b>Address proof is 135 days old</b><small>Bill dated 02 Mar 2026; must be under 90 days</small><span class="fix">Fetch from DigiLocker</span></div></div>
+    <div class="chk ok"><div class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0F7B3F" stroke-width="4"><path d="M4 12l5 5L20 6"/></svg></div><div><b>Udyam ••••4760 · Micro, Services</b><small>Name and city match GST record</small></div></div>
+    <div class="chk ok"><div class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0F7B3F" stroke-width="4"><path d="M4 12l5 5L20 6"/></svg></div><div><b>Signatory ID · name matches</b><small>Read by OCR · signed via e-Sign</small></div></div>
+  </div>
+</div></div>
+
+<!-- 4. TRACKER -->
+<div class="phone" id="p4"><div class="notch"></div><div class="screen">
+  <div class="status"><span>09:12</span><span>5G ▮▮▮</span></div>
+  <div class="body" style="gap:9px; padding-top:6px">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start">
+      <div><h3>Order UD-0068</h3><div class="sub">Office Pro · 6 items</div></div>
+      <div class="ontrack">On track</div>
+    </div>
+    <div class="steps">
+      <div class="st done"><div class="dot"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="M4 12l5 5L20 6"/></svg></div><div class="tx">Quote accepted<small>Wed 15 Jul · 11:06</small></div></div>
+      <div class="st done"><div class="dot"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="M4 12l5 5L20 6"/></svg></div><div class="tx">KYC verified<small>Wed 15 Jul · 11:14</small></div></div>
+      <div class="st done"><div class="dot"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="M4 12l5 5L20 6"/></svg></div><div class="tx">Fibre feasibility confirmed<small>Wed 15 Jul · 11:15</small></div></div>
+      <div class="st now"><div class="dot"></div><div class="tx">Installer visit<small>Mon 20 Jul · 10:00–12:00</small>
+        <div class="now-card">Ravi K. · Accel partner<span>Reschedule</span></div></div></div>
+      <div class="st next"><div class="dot"></div><div class="tx">Activation &amp; welcome call<small>Expected Mon 20 Jul</small></div></div>
+      <div class="st next"><div class="dot"></div><div class="tx">First single bill<small>01 Aug · one support number</small></div></div>
+    </div>
+    <div class="wa"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F7B3F" stroke-width="2.4"><path d="M21 12a9 9 0 1 1-4-7.5L21 3l-1 4.2A9 9 0 0 1 21 12z"/></svg>Updates sent on WhatsApp: no need to call</div>
+  </div>
+</div></div>
+
+</body>
+</html>

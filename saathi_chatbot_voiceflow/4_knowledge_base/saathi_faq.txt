@@ -1,0 +1,102 @@
+ACCEL BUSINESS · SAATHI · FREQUENTLY ASKED QUESTIONS
+(Prototype knowledge base for the Airtel SYNC 2026 case. Accel Telecom is fictional and the data is synthetic.)
+
+Q: What is Saathi?
+A: Saathi is Accel Business's digital advisor for small businesses. In one chat it suggests the right bundle,
+shows one monthly price, verifies your business and lets you track your order. A real person is always one tap away.
+
+Q: Which languages does Saathi speak?
+A: Hindi, English, Marathi, Tamil, Telugu, Kannada, Malayalam, Gujarati, Bengali and Punjabi, by chat or voice.
+
+Q: What can I buy?
+A: Business fibre (100 Mbps, 300 Mbps, 1 Gbps), 5G AirFiber, leased lines, business postpaid SIMs, 4G/5G failover,
+static IP, SD-WAN, cloud telephony, toll-free numbers, business SMS, WhatsApp Business API, cloud email and office
+suite, cloud backup, website + domain, cloud POS and billing, endpoint security, managed firewall, secure Wi-Fi,
+cloud CCTV, machine-monitoring IoT and fleet trackers. Everything is on one bill.
+
+Q: How long does installation take?
+A: 5G AirFiber about 2 days; business fibre about 5 days (1 Gbps about 7); business SIMs 1 day; cloud services 1–3
+days; CCTV about 4 days; leased line 20 Mbps about 21 days and 100 Mbps about 30 days; SD-WAN about 14 days. The
+quote shows the expected time for your bundle.
+
+Q: What is the activation guarantee? Do I get connected in 72 hours?
+A: Every quote shows one guarantee, and that is the one we keep. Small single-site businesses in tier-1 cities on
+business fibre or 5G AirFiber see "Connected in 72 hours, guaranteed": if fibre takes longer, we connect you on 5G
+AirFiber first and switch you over when the fibre is installed. Everyone else sees a firm number of days, for
+example "Connected within 10 days of your order, guaranteed", based on how long past orders like yours took. The
+exact rules are under ACTIVATION PROMISE in the bundles and rules document. Either way, if we miss it, month one is
+free: the whole first monthly bill is credited automatically. You don't need to ask. Saathi messages you at every
+stage (order confirmed, business verified, installer booked, connected), so you never have to chase us. (The other
+items in a bundle, like CCTV or software, follow the install time shown in the quote.)
+Saathi never offers 72 hours when your quote shows a number of days: the quote decides.
+
+Q: What happens if my internet goes down?
+A: You're credited automatically, usually before you even contact us. Outages under 60 minutes get no credit (we
+still tell you). Beyond that, each started 4 hours of downtime credits one day's bill (the monthly bill divided by
+30). If your bundle has 4G/5G failover, you stayed online, so the credit is half. The credit is capped at half of
+the monthly bill. Saathi messages you with the amount; it appears on your next bill.
+
+Q: What if fibre isn't available at my shop?
+A: You get Biz 5G AirFiber: plug-and-play wireless broadband, live in about 2 days, no digging. You can move to fibre
+later.
+
+Q: Is GST included in the price?
+A: No, GST is extra. Setup fees are one-time and shown separately.
+
+Q: How long is the contract?
+A: It depends on the items: 6 months for 5G AirFiber, 12 months for most bundles, 24 months for leased line 100 Mbps,
+SD-WAN, managed firewall and machine IoT. The quote always shows the plan length.
+
+Q: I don't have a GST registration. Can I still buy?
+A: Yes. Fibre, AirFiber, business SIMs, failover, static IP, cloud email, backup, website, POS, security software,
+Wi-Fi and CCTV don't need GST. Products that need an active GSTIN: Biz Fibre 1G, leased lines, SD-WAN, cloud
+telephony, toll-free, business SMS, WhatsApp Business API, managed firewall and machine IoT.
+
+Q: Which documents do I need?
+A: Usually none to upload. If you have a GSTIN, Saathi checks it in the GST registry directly, so no GST certificate
+is needed. Udyam is optional. The signatory's ID comes from DigiLocker and is signed with Aadhaar e-Sign. An address
+proof dated within the last 90 days is needed only if you have no GSTIN or the installation address differs from
+the GST address.
+
+Q: The GSTIN lookup didn't work. What now?
+A: Take a photo of your GST registration certificate. Saathi reads it on your phone (the photo isn't uploaded),
+shows you the GSTIN, name and address it read so you can correct them, and then checks the GSTIN exactly as if you
+had typed it. This needs your yes to KYC verification. If anything doesn't match the registry, a specialist checks
+it with you.
+
+Q: What did I agree to, and how do I take it back?
+A: Saathi asks separately about three things: looking up your registrations, verifying your business (KYC), and
+offers on WhatsApp. Say "withdraw consent" any time and tell Saathi which one; it stops right away and Saathi
+tells you what that changes. Saying no to offers never affects your plan.
+
+Q: Why was my GSTIN not accepted?
+A: Either it has a typo (the last character is a checksum) or the GST registry shows it as Cancelled or Suspended.
+GST-only products can't be activated on a cancelled or suspended GSTIN. You can continue with a plan that doesn't
+need GST, or talk to our team.
+
+Q: How do I track my order?
+A: You shouldn't need to: Saathi sends a WhatsApp update at each step. You can always ask Saathi "where is my order"
+and share your order number (it looks like UD-0068); it shows the timeline and the hours left until the time
+guaranteed on your quote. (In this prototype the orders are demo orders and the WhatsApp updates are shown in the tracker, not sent.)
+
+Q: Can I change my bundle?
+A: Yes. Before you accept, add or remove anything and the price updates instantly. After activation, ask Saathi or
+your account specialist.
+
+Q: Who installs it?
+A: An Accel engineer or a certified local Accel partner. You choose the visit slot and can reschedule in the chat.
+
+Q: How do I pay?
+A: The first payment and monthly bills can be paid by UPI Autopay. You get one bill for everything. (In this
+prototype, payment and UPI Autopay are simulated: no money is taken.)
+
+Q: I have 3 or more branches or a factory. Can Saathi help?
+A: Yes. Saathi prepares your quote and verifies your business, then a specialist helps with site surveys,
+leased lines or SD-WAN.
+
+Q: Can I talk to a person?
+A: Any time. Tap "Talk to a person", share your number and a good time, and a specialist or local partner will call.
+
+Q: Are there discounts?
+A: The quote already shows the best catalogue price for your plan length. Saathi does not offer other discounts. A
+specialist can discuss larger orders.

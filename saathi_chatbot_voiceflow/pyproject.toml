@@ -1,0 +1,10 @@
+# pyproject.toml: Python tooling config for _build/gen_kit.py (the build step that injects case data).
+# Lint and format with:  ruff check _build  &&  ruff format _build
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+# E/W: pycodestyle · F: pyflakes · I: import order · N: PEP 8 naming · B: bugbear
+select = ["E", "W", "F", "I", "N", "B"]

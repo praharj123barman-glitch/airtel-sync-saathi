@@ -1,0 +1,23 @@
+{
+  "name": "saathi-voiceflow-kit",
+  "private": true,
+  "description": "Accel Saathi: Voiceflow chatbot kit for the Airtel SYNC 2026 case 'Project Udyam Digital' (fictional operator, synthetic data).",
+  "type": "module",
+  "scripts": {
+    "test": "node 6_tests/run_function_tests.mjs",
+    "test:mutation": "stryker run && node 6_tests/mutation/summarise.mjs",
+    "lint": "eslint _build 6_tests eslint.config.js stryker.config.mjs",
+    "format": "prettier --write _build 6_tests 7_demo_site 8_back_office eslint.config.js stryker.config.mjs",
+    "format:check": "prettier --check _build 6_tests 7_demo_site 8_back_office eslint.config.js stryker.config.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stryker-mutator/core": "10.0.0",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.9.10"
+  }
+}

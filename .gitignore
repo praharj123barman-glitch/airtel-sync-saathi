@@ -1,0 +1,19 @@
+# Secrets: never commit API keys (the Voiceflow key lives in saathi_chatbot_voiceflow/.env)
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Dependencies and tool caches
+node_modules/
+.stryker-tmp/
+.ruff_cache/
+__pycache__/
+*.pyc
+saathi_chatbot_voiceflow/reports/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*

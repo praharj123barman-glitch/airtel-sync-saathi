@@ -1,0 +1,845 @@
+<!doctype html>
+<!--
+  index.html: back-office view of unclosed leads (REACH layer).
+  How it fits: reads the leads data, either the bundled SIMULATED sample (sample_leads.js, the 5,000 synthetic case
+  leads) or your Google Sheet (a CSV file, or the sheet's "Publish to web → CSV" link), and recomputes territory,
+  rep-callback handoff and rewards with reach_rules.js, the same rules the chatbot uses (generated from
+  _build/reach_rules.js). Shows unclosed leads, filterable by score band, segment, territory, drop-off stage and
+  referrer type, with the handoff summary; plus the rewards earned on activation.
+  Same stack and style as 7_demo_site/index.html: one static page, Poppins, vanilla JavaScript, no build step.
+  All companies, people and identifiers in the sample are fictional (Airtel SYNC 2026 case, synthetic data).
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Saathi Back Office</title>
+    <meta
+      name="description"
+      content="Back-office view of unclosed Saathi leads: score band, territory, referrer and rep-callback handoffs (prototype, synthetic data)."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --red: #e40000;
+        --red-deep: #b80000;
+        /* Red TEXT on tinted backgrounds: the deeper red keeps at least 4.5:1 contrast (brand red is ~4.2:1 on the tint). */
+        --red-text: #b80000;
+        --amber: #b45309;
+        --amber-tint: #fef3e2;
+        --ink: #1a1a1a;
+        --muted: #5f6368;
+        --line: #e6e7eb;
+        --tint: #fdecec;
+        --panel: #f6f7f9;
+        --bg: #ffffff;
+        --card: #ffffff;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --ink: #f2f2f3;
+          --muted: #a8acb3;
+          --line: #2c2e33;
+          /* Brand red on the dark maroon tint is only ~3.3:1; a light coral reads at ~7:1. */
+          --red-text: #ff8a80;
+          --tint: #3a1517;
+          --amber-tint: #3a2a12;
+          --panel: #17181b;
+          --bg: #0e0f11;
+          --card: #15161a;
+        }
+      }
+      :root[data-theme="dark"] {
+        --ink: #f2f2f3;
+        --muted: #a8acb3;
+        --line: #2c2e33;
+        --red-text: #ff8a80;
+        --tint: #3a1517;
+        --amber-tint: #3a2a12;
+        --panel: #17181b;
+        --bg: #0e0f11;
+        --card: #15161a;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Poppins", system-ui, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+      header {
+        padding: 24px 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .mark {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: var(--red);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+      }
+      .tag {
+        font-size: 12px;
+        color: var(--muted);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 4px 12px;
+      }
+      h1 {
+        font-size: clamp(24px, 3.5vw, 32px);
+        letter-spacing: -0.01em;
+      }
+      .lede {
+        color: var(--muted);
+        font-size: 14px;
+        margin-top: 4px;
+      }
+      .source {
+        margin-top: 16px;
+        background: var(--panel);
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: end;
+      }
+      label {
+        display: grid;
+        gap: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      /* The data-source fields shrink with the panel: a native file input is otherwise wider than a phone screen. */
+      .source label {
+        min-width: 0;
+        max-width: 100%;
+      }
+      input[type="file"] {
+        width: 100%;
+        min-width: 0;
+      }
+      input,
+      select,
+      button {
+        font: inherit;
+        font-size: 14px;
+        color: var(--ink);
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+      button {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button.primary {
+        background: var(--red);
+        border-color: var(--red);
+        color: #fff;
+      }
+      button.primary:hover {
+        background: var(--red-deep);
+      }
+      .grow {
+        flex: 1 1 240px;
+      }
+      .status {
+        font-size: 13px;
+        color: var(--muted);
+        width: 100%;
+      }
+      .status.error {
+        color: var(--red-text);
+      }
+      .tiles {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .tile {
+        background: var(--tint);
+        border-radius: 16px;
+        padding: 16px;
+      }
+      .tile b {
+        display: block;
+        font-size: 24px;
+        color: var(--red-text);
+        line-height: 1.2;
+      }
+      .tile small {
+        font-size: 13px;
+      }
+      .tile .sub {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .filters {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 12px;
+        align-items: end;
+      }
+      /* Long option labels must not widen the grid columns past the page. */
+      .filters select,
+      .filters input[type="search"] {
+        width: 100%;
+        min-width: 0;
+      }
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .check input {
+        width: 18px;
+        height: 18px;
+      }
+      .count {
+        margin: 16px 0 8px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .list {
+        display: grid;
+        gap: 12px;
+      }
+      .lead {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px;
+        display: grid;
+        gap: 8px;
+      }
+      .lead-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: start;
+        flex-wrap: wrap;
+      }
+      .lead h3 {
+        font-size: 16px;
+      }
+      .meta {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .chips {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 999px;
+        padding: 2px 10px;
+        border: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .chip.hot {
+        background: var(--red);
+        border-color: var(--red);
+        color: #fff;
+      }
+      .chip.warm {
+        background: var(--amber-tint);
+        border-color: var(--amber);
+        color: var(--amber);
+      }
+      .chip.cold {
+        color: var(--muted);
+      }
+      .handoff {
+        background: var(--tint);
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+      .handoff b {
+        color: var(--red-text);
+      }
+      .more {
+        margin: 16px auto 0;
+        display: block;
+      }
+      h2 {
+        font-size: 20px;
+        margin-top: 40px;
+      }
+      .note {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .table-wrap {
+        overflow-x: auto;
+        margin-top: 12px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      th {
+        background: var(--panel);
+        font-weight: 600;
+      }
+      td.num,
+      th.num {
+        text-align: right;
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        margin-top: 48px;
+        padding: 24px 0 40px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      @media (max-width: 960px) {
+        .filters {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .tiles {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 560px) {
+        .filters,
+        .tiles {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <div class="mark">A</div>
+          Accel Business · Back office
+        </div>
+        <div class="tag">Prototype · fictional operator · synthetic data</div>
+      </header>
+
+      <h1>Unclosed leads</h1>
+      <p class="lede">
+        Leads Saathi couldn't close, with the field rep who owns each territory. Hot leads (top 20% of scores) are
+        flagged for a rep callback with a context summary.
+      </p>
+
+      <section class="source" aria-label="Data source">
+        <label class="grow"
+          >Google Sheet CSV link (File → Share → Publish to web → CSV)
+          <input id="sheet-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/e/…/pub?output=csv" />
+        </label>
+        <button id="load-url">Load sheet</button>
+        <label
+          >CSV file
+          <input id="csv-file" type="file" accept=".csv,text/csv" />
+        </label>
+        <button id="load-sample" class="primary">Use sample (SIMULATED)</button>
+        <label
+          >Rewards as of
+          <input id="as-of" type="date" />
+        </label>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="tiles" aria-label="Summary">
+        <div class="tile"><b id="tile-unclosed">0</b><small>unclosed leads</small></div>
+        <div class="tile">
+          <b id="tile-handoffs">0</b><small>rep callbacks</small><span class="sub">Hot and not closed</span>
+        </div>
+        <div class="tile">
+          <b id="tile-earned">₹0</b><small>rewards earned on activation</small
+          ><span class="sub" id="tile-earned-sub"></span>
+        </div>
+        <div class="tile">
+          <b id="tile-territory">0</b><small>digital activations credited to territory reps</small>
+        </div>
+      </section>
+
+      <section class="filters" aria-label="Filters">
+        <label
+          >Score band
+          <select id="filter-band"></select
+        ></label>
+        <label
+          >Segment
+          <select id="filter-segment"></select
+        ></label>
+        <label
+          >Territory
+          <select id="filter-territory"></select
+        ></label>
+        <label
+          >Drop-off stage
+          <select id="filter-stage"></select
+        ></label>
+        <label
+          >Referrer type
+          <select id="filter-referrer"></select
+        ></label>
+        <label>Search <input id="filter-search" type="search" placeholder="Business, city, code" /></label>
+        <label class="check"><input id="filter-handoff" type="checkbox" /> Rep callbacks only</label>
+      </section>
+
+      <p class="count" id="count" aria-live="polite"></p>
+      <div class="list" id="list"></div>
+      <button id="show-more" class="more">Show more</button>
+
+      <h2>Rewards earned on activation</h2>
+      <p class="note" id="rewards-note"></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Beneficiary</th>
+              <th>Reward</th>
+              <th class="num">Activations</th>
+              <th class="num">Held</th>
+              <th class="num">Payable</th>
+              <th class="num">Void (customer left)</th>
+            </tr>
+          </thead>
+          <tbody id="rewards-body"></tbody>
+        </table>
+      </div>
+
+      <footer>
+        Accel Telecom and Accel Business are fictional companies from the Airtel SYNC 2026 case "Project Udyam Digital".
+        The sample is SIMULATED from the case's synthetic leads: referral attribution, "bundle viewed" and "closed by
+        Saathi" are assumptions for the demo. Rules and rates: _build/reach_rules.js (REACH_RATES).
+      </footer>
+    </div>
+
+    <script src="reach_rules.js"></script>
+    <script src="sample_leads.js"></script>
+    <script>
+      // Back-office app: load rows, tag them with the shared REACH rules, filter, render.
+      (function backOffice() {
+        const PAGE_SIZE = 50;
+        const STORAGE_KEY = "saathi-back-office-sheet-url";
+        const ALL = "all";
+        const BANDS = ["Hot", "Warm", "Cold"];
+        const REFERRER_LABEL = {
+          ca_partner: "CA partner",
+          customer: "Customer (micro-agent)",
+          field_rep: "Field rep",
+          none: "No referral",
+        };
+        const REWARD_LABEL = {
+          commission: "Commission",
+          bill_credit: "Bill credit",
+          incentive: "Referral incentive",
+          territory_credit: "Territory credit",
+        };
+        const rules = window.ReachRules;
+        const element = (id) => document.getElementById(id);
+        let taggedRows = [];
+        let visibleCount = PAGE_SIZE;
+
+        function formatRupees(amount) {
+          return "₹" + Math.round(amount).toLocaleString("en-IN");
+        }
+        function escapeHtml(text) {
+          return String(text == null ? "" : text).replace(
+            /[&<>"']/g,
+            (character) => "&#" + character.charCodeAt(0) + ";",
+          );
+        }
+        function setStatus(message, isError) {
+          element("status").textContent = message;
+          element("status").className = "status" + (isError ? " error" : "");
+        }
+
+        /** CSV text → array of objects (quoted fields with commas and doubled quotes supported). */
+        function parseCsv(text) {
+          const rows = [];
+          let row = [];
+          let field = "";
+          let inQuotes = false;
+          for (let i = 0; i < text.length; i++) {
+            const character = text[i];
+            if (inQuotes) {
+              if (character === '"' && text[i + 1] === '"') {
+                field += '"';
+                i++;
+              } else if (character === '"') inQuotes = false;
+              else field += character;
+            } else if (character === '"') inQuotes = true;
+            else if (character === ",") {
+              row.push(field);
+              field = "";
+            } else if (character === "\n" || character === "\r") {
+              if (character === "\r" && text[i + 1] === "\n") i++;
+              row.push(field);
+              rows.push(row);
+              row = [];
+              field = "";
+            } else field += character;
+          }
+          if (field || row.length) {
+            row.push(field);
+            rows.push(row);
+          }
+          const [header, ...body] = rows.filter((candidate) => candidate.some((value) => value !== ""));
+          if (!header || header.indexOf("stage") < 0)
+            throw new Error('no "stage" column: is this the Saathi leads sheet?');
+          return body.map((values) =>
+            Object.fromEntries(header.map((name, index) => [name.trim(), values[index] ?? ""])),
+          );
+        }
+
+        function asOfDate() {
+          const value = element("as-of").value;
+          return value ? new Date(value + "T00:00:00Z") : new Date();
+        }
+
+        /** Tags every row with the shared rules (territory, handoff, rewards) once, so filtering stays fast. */
+        function useRows(rows, label) {
+          const asOf = asOfDate();
+          taggedRows = rows.map((row) => ({ row, tags: rules.tagLead(row, asOf) }));
+          visibleCount = PAGE_SIZE;
+          fillFilterOptions();
+          render();
+          setStatus(label + ": " + rows.length.toLocaleString("en-IN") + " rows loaded.");
+        }
+
+        function fillSelect(id, values, labelOf) {
+          const select = element(id);
+          const previous = select.value || ALL;
+          select.innerHTML =
+            '<option value="all">All</option>' +
+            values
+              .map(
+                (value) =>
+                  '<option value="' +
+                  escapeHtml(value) +
+                  '">' +
+                  escapeHtml(labelOf ? labelOf(value) : value) +
+                  "</option>",
+              )
+              .join("");
+          select.value = values.indexOf(previous) >= 0 ? previous : ALL;
+        }
+
+        function fillFilterOptions() {
+          const unique = (pick) => Array.from(new Set(taggedRows.map(pick).filter(Boolean))).sort();
+          fillSelect("filter-band", BANDS);
+          fillSelect(
+            "filter-segment",
+            unique((entry) => entry.row.segment_code),
+            (code) => rules.SEGMENT_LABEL[code] || code,
+          );
+          fillSelect(
+            "filter-territory",
+            unique((entry) => entry.tags.territory.territoryLabel),
+          );
+          fillSelect(
+            "filter-stage",
+            rules.FUNNEL_STAGES.filter((stage) => stage !== "Activated"),
+          );
+          fillSelect("filter-referrer", Object.keys(REFERRER_LABEL), (type) => REFERRER_LABEL[type]);
+        }
+
+        function matchesFilters(entry) {
+          const { row, tags } = entry;
+          const band = element("filter-band").value;
+          const segment = element("filter-segment").value;
+          const territory = element("filter-territory").value;
+          const stage = element("filter-stage").value;
+          const referrer = element("filter-referrer").value;
+          const search = element("filter-search").value.trim().toLowerCase();
+          if (tags.dropOffStage === "Activated") return false;
+          if (band !== ALL && row.priority !== band) return false;
+          if (segment !== ALL && row.segment_code !== segment) return false;
+          if (territory !== ALL && tags.territory.territoryLabel !== territory) return false;
+          if (stage !== ALL && tags.dropOffStage !== stage) return false;
+          if (referrer !== ALL && tags.referral.referrerType !== referrer) return false;
+          if (element("filter-handoff").checked && !tags.handoff.isHandoff) return false;
+          if (search) {
+            const haystack = [row.business_name, row.city, row.referral_code, row.ref_id].join(" ").toLowerCase();
+            if (haystack.indexOf(search) < 0) return false;
+          }
+          return true;
+        }
+
+        function leadCard(entry) {
+          const { row, tags } = entry;
+          const bandClass = String(row.priority || "").toLowerCase();
+          const referral =
+            tags.referral.referrerType !== "none"
+              ? '<span class="chip">' +
+                escapeHtml(REFERRER_LABEL[tags.referral.referrerType]) +
+                " · " +
+                escapeHtml(tags.referral.code) +
+                "</span>"
+              : "";
+          const handoff = tags.handoff.isHandoff
+            ? '<div class="handoff"><b>Rep callback → ' +
+              escapeHtml(tags.handoff.ownerLabel) +
+              "</b><br />" +
+              escapeHtml(tags.handoff.summary) +
+              "</div>"
+            : "";
+          return (
+            '<article class="lead">' +
+            '<div class="lead-top"><h3>' +
+            escapeHtml(row.business_name || "Unnamed business") +
+            "</h3>" +
+            '<div class="chips"><span class="chip ' +
+            escapeHtml(bandClass) +
+            '">' +
+            escapeHtml(row.priority || "No score") +
+            " · " +
+            escapeHtml(row.lead_score) +
+            "</span>" +
+            referral +
+            "</div></div>" +
+            '<p class="meta">' +
+            escapeHtml(rules.SEGMENT_LABEL[row.segment_code] || "Segment unknown") +
+            " · " +
+            escapeHtml(tags.territory.territoryLabel) +
+            " · owner " +
+            escapeHtml(tags.territory.repLabel) +
+            "</p>" +
+            '<p class="meta">Dropped at <b>' +
+            escapeHtml(tags.dropOffStage) +
+            "</b>" +
+            (row.reason_not_closed ? ": " + escapeHtml(row.reason_not_closed) : "") +
+            (row.bundle_name
+              ? " · viewed " +
+                escapeHtml(row.bundle_name) +
+                (Number(row.monthly_total) ? " " + formatRupees(Number(row.monthly_total)) + "/mo" : "")
+              : "") +
+            "</p>" +
+            handoff +
+            "</article>"
+          );
+        }
+
+        function renderSummary() {
+          const unclosed = taggedRows.filter((entry) => entry.tags.dropOffStage !== "Activated");
+          element("tile-unclosed").textContent = unclosed.length.toLocaleString("en-IN");
+          element("tile-handoffs").textContent = unclosed
+            .filter((entry) => entry.tags.handoff.isHandoff)
+            .length.toLocaleString("en-IN");
+          const rewards = taggedRows.flatMap((entry) => entry.tags.rewards);
+          const sum = (status) =>
+            rewards
+              .filter((reward) => reward.status === status)
+              .reduce((total, reward) => total + reward.amountInRupees, 0);
+          element("tile-earned").textContent = formatRupees(sum("held") + sum("payable"));
+          element("tile-earned-sub").textContent =
+            formatRupees(sum("held")) +
+            " held · " +
+            formatRupees(sum("payable")) +
+            " payable · " +
+            formatRupees(sum("void")) +
+            " void";
+          element("tile-territory").textContent = rewards
+            .filter((reward) => reward.rewardKind === "territory_credit" && reward.status !== "void")
+            .length.toLocaleString("en-IN");
+        }
+
+        function renderRewards() {
+          const byBeneficiary = {};
+          taggedRows.forEach((entry) =>
+            entry.tags.rewards.forEach((reward) => {
+              const key = reward.beneficiaryId + "|" + reward.rewardKind;
+              const total = (byBeneficiary[key] = byBeneficiary[key] || {
+                reward,
+                activations: 0,
+                held: 0,
+                payable: 0,
+                voided: 0,
+              });
+              total.activations += 1;
+              if (reward.status === "void") total.voided += 1;
+              else total[reward.status] += reward.amountInRupees;
+            }),
+          );
+          const rowsHtml = Object.values(byBeneficiary)
+            .sort((first, second) => second.held + second.payable - (first.held + first.payable))
+            .slice(0, 15)
+            .map(
+              (total) =>
+                "<tr><td>" +
+                escapeHtml(total.reward.beneficiaryLabel) +
+                "</td><td>" +
+                escapeHtml(REWARD_LABEL[total.reward.rewardKind]) +
+                '</td><td class="num">' +
+                total.activations +
+                '</td><td class="num">' +
+                formatRupees(total.held) +
+                '</td><td class="num">' +
+                formatRupees(total.payable) +
+                '</td><td class="num">' +
+                total.voided +
+                "</td></tr>",
+            )
+            .join("");
+          element("rewards-body").innerHTML =
+            rowsHtml || '<tr><td colspan="6">No activations with rewards yet.</td></tr>';
+          const rates = rules.REACH_RATES;
+          element("rewards-note").textContent =
+            "Earned only when a lead reaches Activated; held " +
+            rates.payoutHoldDays +
+            " days, then payable; void if the customer leaves first. Top 15 beneficiaries shown. Rates: CA partner " +
+            Math.round(rates.referral.ca_partner.shareOfFirstMonthlyBill * 100) +
+            "% of the first bill (cap " +
+            formatRupees(rates.referral.ca_partner.capInRupees) +
+            "), customer " +
+            Math.round(rates.referral.customer.shareOfFirstMonthlyBill * 100) +
+            "% as bill credit (cap " +
+            formatRupees(rates.referral.customer.capInRupees) +
+            "), field-rep referral " +
+            Math.round(rates.referral.field_rep.shareOfFirstMonthlyBill * 100) +
+            "% (cap " +
+            formatRupees(rates.referral.field_rep.capInRupees) +
+            "), territory credit " +
+            Math.round(rates.territoryCredit.shareOfFirstMonthlyBill * 100) +
+            "% (cap " +
+            formatRupees(rates.territoryCredit.capInRupees) +
+            ").";
+        }
+
+        function render() {
+          const matching = taggedRows
+            .filter(matchesFilters)
+            .sort((first, second) => Number(second.row.lead_score || 0) - Number(first.row.lead_score || 0));
+          element("count").textContent =
+            matching.length.toLocaleString("en-IN") +
+            " unclosed lead" +
+            (matching.length === 1 ? "" : "s") +
+            " match · sorted by score" +
+            (matching.length > visibleCount ? " · showing " + visibleCount : "");
+          element("list").innerHTML = matching.slice(0, visibleCount).map(leadCard).join("");
+          element("show-more").style.display = matching.length > visibleCount ? "block" : "none";
+          renderSummary();
+          renderRewards();
+        }
+
+        function loadSample() {
+          if (!Array.isArray(window.SAMPLE_LEADS)) {
+            setStatus("sample_leads.js is missing: run _build/gen_kit.py.", true);
+            return;
+          }
+          element("as-of").value = window.SAMPLE_AS_OF || "";
+          useRows(window.SAMPLE_LEADS, "Sample (SIMULATED)");
+        }
+
+        element("load-sample").addEventListener("click", loadSample);
+        element("load-url").addEventListener("click", async () => {
+          const url = element("sheet-url").value.trim();
+          if (!url) return setStatus("Paste the sheet's published CSV link first.", true);
+          try {
+            localStorage.setItem(STORAGE_KEY, url);
+          } catch (storageError) {
+            // Storage can be blocked (private window); loading still works.
+          }
+          try {
+            setStatus("Loading sheet…");
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            useRows(parseCsv(await response.text()), "Google Sheet");
+          } catch (loadError) {
+            setStatus("Couldn't load the sheet: " + loadError.message, true);
+          }
+        });
+        element("csv-file").addEventListener("change", (event) => {
+          const file = event.target.files[0];
+          if (!file) return;
+          file
+            .text()
+            .then((text) => useRows(parseCsv(text), file.name))
+            .catch((readError) => setStatus("Couldn't read the file: " + readError.message, true));
+        });
+        element("as-of").addEventListener("change", () => {
+          if (taggedRows.length)
+            useRows(
+              taggedRows.map((entry) => entry.row),
+              "Rewards recalculated",
+            );
+        });
+        [
+          "filter-band",
+          "filter-segment",
+          "filter-territory",
+          "filter-stage",
+          "filter-referrer",
+          "filter-handoff",
+        ].forEach((id) =>
+          element(id).addEventListener("change", () => {
+            visibleCount = PAGE_SIZE;
+            render();
+          }),
+        );
+        element("filter-search").addEventListener("input", () => {
+          visibleCount = PAGE_SIZE;
+          render();
+        });
+        element("show-more").addEventListener("click", () => {
+          visibleCount += PAGE_SIZE;
+          render();
+        });
+
+        try {
+          element("sheet-url").value = localStorage.getItem(STORAGE_KEY) || "";
+        } catch (storageError) {
+          // No stored link: fine.
+        }
+        if (!rules) setStatus("reach_rules.js is missing: run _build/gen_kit.py.", true);
+        else loadSample();
+      })();
+    </script>
+  </body>
+</html>
