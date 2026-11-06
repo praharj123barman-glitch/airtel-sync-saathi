@@ -3834,7 +3834,9 @@ function parseCsvRows(text) {
   return rows;
 }
 const resultsSheetRows = parseCsvRows(
-  fs.readFileSync(path.join(testDirectory, "conversation_results.csv"), "utf8").replace(/^﻿/, ""),
+  fs
+    .readFileSync(path.join(testDirectory, "conversation_results.csv"), "utf8")
+    .replace(new RegExp("^" + String.fromCharCode(0xfeff)), ""),
 );
 const sheetIds = resultsSheetRows.slice(1).map((row) => Number(row[1]));
 const sortedNumbers = (numbers) => numbers.slice().sort((first, second) => first - second);

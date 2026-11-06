@@ -15,9 +15,10 @@ from pptx.util import Inches, Pt
 SP = pathlib.Path(__file__).parent
 OUT = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else SP / "deck_raw.pptx"
 
-TEAM = "[Team Name]"
-CAMPUS = "[Campus Name]"
-MEMBERS = "Prohorj Babu Bormon  ·  [Teammate Name]"
+TEAM = "buri buri zaimon"  # as registered on Unstop
+MEMBERS = "Prohorj Babu Bormon  ·  Mubashir Afzal"
+CAMPUS = "NIT Karnataka (NITK)"
+REPO = "github.com/praharj123barman-glitch/airtel-sync-saathi"
 
 # ---------- tokens ----------
 RED = RGBColor(0xE4, 0x00, 0x00)
@@ -218,11 +219,13 @@ for c in chips:
     alpha(b, 14)
     alpha(b, 45, which="line")
     cx += w + 0.07
-text(s, 0.62, 4.6, 3.6, 0.22, [[(f"Team {TEAM}", {"bold": True}), (f"  ·  {CAMPUS}", {})]],
-     size=9, color=WHITE)
-text(s, 0.62, 4.82, 3.6, 0.2, MEMBERS, size=7.5, color=PINKTXT)
+text(s, 0.62, 4.56, 4.0, 0.2, [[(f"Team {TEAM}", {"bold": True}), (f"  ·  {CAMPUS}", {})]], size=9, color=WHITE)
+text(s, 0.62, 4.76, 4.0, 0.18, MEMBERS, size=7.5, color=PINKTXT)
+text(s, 0.62, 4.94, 4.0, 0.18, f"Prototype + code: {REPO}", size=6.5, color=PINKTXT)
 notes(s, "Accel Saathi: a digital-first acquisition and onboarding journey for Accel Business. "
          "One conversation on the owner's phone replaces a 17.6-day, field-led process. "
+         "The prototype is built and tested: a Voiceflow agent with five playbooks and eleven tested function "
+         "tools, a demo site and a back-office page; the code is public on GitHub. "
          "All numbers in this deck come from our analysis of the case data pack (smb_leads.csv, "
          "product_catalogue.csv, mock registries).")
 
@@ -380,17 +383,17 @@ s = new_content_slide()
 header(s, "03", "The solution: Saathi journey and prototype",
        "Saathi replaces a 17.6-day, field-led process with one 10-minute conversation on the owner's phone")
 steps = [
-    ("Advisor", "GenAI advisor (chat or voice, 10 languages) asks 4–5 questions, then recommends a "
-                "catalogue bundle with one monthly price and a plain-language reason.",
+    ("Advisor", "The owner shares a GSTIN (or Udyam number): Saathi reads the registries and proposes a "
+                "bundle with zero questions for 73% of GSTINs; otherwise it asks 1–5.",
      "Targets 827 visit drop-offs", "phone1.png"),
-    ("Quote & checkout", "One transparent monthly price. The owner toggles add-ons and term; eligibility "
-                         "rules (GSTIN, size, city tier, dependencies) are enforced live.",
+    ("Quote & checkout", "One monthly price from a rules engine, never the LLM. Add-ons and term toggle live; "
+                         "every quote carries a guarantee: 72 h or a firm date.",
      "Targets 385 slow / confusing quotes", "phone2.png"),
-    ("Smart KYC", "Consent first. GSTIN and Udyam fetched by lookup; documents read by OCR and cross-checked; "
-                  "signatory signs by e-Sign; DigiLocker fills gaps.",
+    ("Smart KYC", "Consent per purpose first. GSTIN checksum and registry status block dead GSTINs; a "
+                  "certificate photo is read by OCR on the phone.",
      "Targets 273 paperwork drops", "phone3.png"),
-    ("Tracker", "Live status with feasibility, installer slot and go-live date. Proactive WhatsApp updates "
-                "replace the 3 chase calls per customer.",
+    ("Tracker", "Counts down to the quote's guarantee and credits month one if missed. Proactive updates "
+                "and outage credits replace the 3 chase calls.",
      "Targets 167 post-KYC losses", "phone4.png"),
 ]
 top, bottom = 1.62, 4.5
@@ -414,8 +417,8 @@ for i, (title, desc, chip, img) in enumerate(steps):
 # humans in the loop strip
 boxed(s, 0.45, 4.6, 1.3, 0.5, [[("People stay in the loop", {})]], fill=INK, radius=0.07, size=7.5,
       bold=True, color=WHITE, anchor=MSO_ANCHOR.MIDDLE, margin=(0.1, 0, 0.08, 0))
-loop = [("Channel partners ", "assist owners in-store on the same app; their QR code earns commission even "
-                              "if the owner finishes alone."),
+loop = [("CA partners and customers ", "refer with a checked code; rewards are paid only after the "
+                                      "business stays 90 days."),
         ("Field sales ", "focus on multi-site and factories (73% of new revenue); every Saathi hand-off "
                          "arrives with full context."),
         ("Back office ", "works a queue of leads Saathi couldn't close, ranked by a propensity model: "
@@ -424,14 +427,15 @@ for i, (b, t) in enumerate(loop):
     x = 1.88 + i * 2.57
     text(s, x, 4.6, 2.45, 0.5, [[(b, {"font": FS, "color": RED}), (t, {})]], size=6.3, color=INK,
          anchor=MSO_ANCHOR.MIDDLE, ls=1.05)
-footer(s, "Screens: prototype UI using lead L00068 (Metro Diagnostics, Delhi, Hindi-speaking) from the case data; IDs masked. "
-          "Propensity model: logistic regression on lead-time fields, 5-fold CV AUC 0.71.")
-notes(s, "Four steps, one sitting. The advisor talks in the owner's language and recommends from the real "
-         "catalogue: the LLM explains, but prices and eligibility come from a rules engine. The quote is one "
-         "monthly number with toggles. Smart KYC asks for consent first, looks up GSTIN and Udyam so most "
-         "owners upload nothing, and flags problems like a stale address proof instantly. The tracker replaces "
-         "chase calls; in the data, customers who chased five times churned at 28% versus 6% for one. "
-         "Partners and field sales use the same app, so the digital journey adds to them rather than competing.")
+footer(s, "Built and tested in Voiceflow: 5 playbooks, 11 function tools, 308 automated tests. Zero-question share measured on all "
+          "3,534 registry GSTINs; Udyam entry covers 42.6% of leads without a GSTIN. Screens: lead L00068, IDs masked. Lead score AUC 0.71.")
+notes(s, "Four steps, one sitting. The journey starts from the GSTIN: Saathi reads the GST and Udyam registries "
+         "and proposes a bundle with no questions for 73% of registered businesses; owners without a GSTIN can "
+         "start with their Udyam number. Prices and eligibility come from a rules engine, never the LLM. Every "
+         "quote carries an activation guarantee: 72 hours where the data supports it (small single-site "
+         "businesses in tier-1 cities), a firm date elsewhere, month one free if missed. Smart KYC asks consent "
+         "per purpose, blocks cancelled GSTINs and reads a certificate photo on the phone. The tracker replaces "
+         "chase calls; in the data, customers who chased five times churned at 28% versus 6% for one.")
 
 # ============ SLIDE 5 — ARCHITECTURE & PRIVACY ============
 s = new_content_slide()
@@ -442,22 +446,22 @@ LX, CX0, CW_ = 0.45, 1.27, 4.88
 layer_lab = [("CHANNELS", 1.62, 0.36), ("CORE", 2.13, 0.38), ("SERVICES", 2.69, 1.1), ("DATA & APIs", 3.97, 1.1)]
 for lab, y, h in layer_lab:
     text(s, LX, y, 0.78, h, lab, size=5.8, font=FS, color=MUTED, anchor=MSO_ANCHOR.MIDDLE)
-chans = ["WhatsApp", "Mobile web (PWA)", "Voice / IVR", "Partner & field app"]
+chans = ["Web chat widget", "WhatsApp *", "Voice / IVR *", "Back-office page"]
 pw_ = (CW_ - 3 * 0.08) / 4
 for i, c in enumerate(chans):
     boxed(s, CX0 + i * (pw_ + 0.08), 1.62, pw_, 0.36, [[(c, {})]], fill=WHITE, line=RGBColor(0xC9, 0xCB, 0xD0),
           radius=0.08, size=7, font=FS, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
 arrow(s, CX0 + CW_ / 2, 1.99, CX0 + CW_ / 2, 2.12)
 boxed(s, CX0, 2.13, CW_, 0.38,
-      [[("Saathi orchestrator  ", {"font": FS}),
-        ("journey state · speech ↔ text in 10 languages · consent checkpoint", {})]],
+      [[("Voiceflow agent  ", {"font": FS}),
+        ("global prompt · 5 playbooks · 11 tested function tools · consent checkpoint", {})]],
       fill=INK, radius=0.06, size=6.8, color=WHITE, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
 arrow(s, CX0 + CW_ / 2, 2.52, CX0 + CW_ / 2, 2.67)
 svc = [("GenAI advisor", "LLM with tool calls: asks, explains, translates. Never sets a price."),
-       ("Rules & pricing", "Eligibility, product dependencies and catalogue prices, fully deterministic."),
-       ("Smart KYC", "OCR + checks: GSTIN checksum & status, name/address match, proof ≤ 90 days."),
-       ("Orders & tracker", "Feasibility, install slots; status events pushed to WhatsApp."),
-       ("Lead scoring", "Propensity model routes unclosed leads to partners and field.")]
+       ("Rules & pricing", "price_bundle: catalogue, eligibility and the quote's guarantee. Deterministic."),
+       ("Smart KYC", "GSTIN checksum & status, Udyam entry, consent per purpose; OCR of a GST certificate."),
+       ("Orders & tracker", "Counts down to the quoted guarantee; month-one and outage credits."),
+       ("Lead routing", "Lead score (AUC 0.71), referral codes, territory rep for Hot leads.")]
 sw = (CW_ - 4 * 0.07) / 5
 for i, (t, d_) in enumerate(svc):
     x = CX0 + i * (sw + 0.07)
@@ -466,10 +470,10 @@ for i, (t, d_) in enumerate(svc):
     text(s, x + 0.07, 2.78, sw - 0.12, 0.2, t, size=6.8, font=FS, color=INK)
     text(s, x + 0.07, 2.99, sw - 0.12, 0.78, d_, size=5.8, color=INK, ls=1.05)
 arrow(s, CX0 + CW_ / 2, 3.8, CX0 + CW_ / 2, 3.95)
-groups = [("Accel systems", ["Product catalogue", "Lead & order DB", "Consent ledger", "Doc vault (auto-expiry)",
-                             "Masked audit log", "CRM / BSS-OSS"]),
-          ("External APIs (mocked in prototype)", ["GSTIN lookup", "Udyam lookup", "DigiLocker", "Aadhaar e-Sign",
-                                                   "UPI Autopay", "WhatsApp Business API"])]
+groups = [("In the prototype (case data)", ["Catalogue · 25 products", "GST registry · 3,534", "Udyam registry · 2,723",
+                                            "Knowledge base · 4 docs", "Lead queue (Sheet)", "Consent record"]),
+          ("Mocked now, real in production", ["DigiLocker", "Aadhaar e-Sign", "UPI Autopay", "WhatsApp Business API",
+                                              "CRM / BSS-OSS", "Network monitoring"])]
 gw = (CW_ - 0.08) / 2
 for i, (gt, items) in enumerate(groups):
     gx = CX0 + i * (gw + 0.08)
@@ -486,29 +490,30 @@ for i, (gt, items) in enumerate(groups):
 PX, PW = 6.38, 3.17
 rect(s, PX, 1.62, PW, 3.45, fill=TINT, radius=0.08)
 text(s, PX + 0.15, 1.72, PW - 0.3, 0.22, "Privacy by design · DPDP Act, 2023", size=8.5, bold=True)
-priv = [("Consent", "Plain-language notice in the owner's language before any KYC; one purpose per consent; "
-                    "withdraw any time from the tracker."),
+priv = [("Consent", "Three purposes asked separately (registry lookup, KYC, offers), nothing pre-ticked, in "
+                    "the owner's language; each withdrawable any time in the chat."),
         ("Purpose limitation", "KYC data is used only to verify and activate the order. Never for marketing, "
                                "never to train models."),
         ("Data minimisation", "Lookup before upload: if GSTIN and Udyam verify, no certificate is collected. "
                               "We store extracted fields, not images."),
-        ("Masking & access", "GSTIN, ID and phone masked in UI and logs; PII redacted before any LLM call; "
-                             "partners see only their own leads."),
-        ("Retention", "Uploaded images auto-deleted 30 days after activation; the KYC record is kept only as "
-                      "long as telecom KYC rules require.")]
+        ("Masking & access", "GSTIN, Udyam and phone shown masked; the lead score sees business fields only, never "
+                             "a name or phone; partners see only their own leads."),
+        ("Retention", "A certificate photo is read on the owner's phone and never uploaded; the KYC record is "
+                      "kept only as long as telecom KYC rules require.")]
 for i, (t, d_) in enumerate(priv):
     y = 2.02 + i * 0.6
     text(s, PX + 0.15, y, PW - 0.3, 0.58,
          [{"runs": [(t, {"font": FS, "color": RED, "size": 7})], "sa": 1},
           {"runs": [(d_, {})], "ls": 1.05}], size=6.3, color=INK)
-footer(s, "Proposed prototype stack: Next.js PWA + WhatsApp Business API · FastAPI services · PostgreSQL · OCR with LLM vision for documents · "
-          "mock GSTIN and Udyam APIs backed by the case registries (3,534 and 2,723 records).")
+footer(s, "Built: Voiceflow agent + 11 JavaScript function tools (the rules, 308 automated tests) · demo site with in-browser OCR · back-office page. "
+          f"* Voiceflow channels for the same agent, not switched on yet. Code: {REPO}")
 notes(s, "The design principle is simple: the LLM never decides anything that has money or compliance attached. "
-         "It asks questions, explains and translates; the rules engine sets eligibility and price from the "
-         "catalogue, so every recommendation is reproducible and auditable. Smart KYC runs a GSTIN checksum, "
-         "registry status (which would have blocked the 22 cancelled or suspended GSTINs), cross-document "
-         "name and address matching and the 90-day address-proof rule. Privacy follows the DPDP Act: consent "
-         "per purpose, lookup before upload, masking, and short retention.")
+         "It asks questions, explains and translates; eleven tested function tools set eligibility, price and the "
+         "activation guarantee from the catalogue and the case data, so every answer is reproducible and auditable. "
+         "Smart KYC runs a GSTIN checksum and registry status check (which would have blocked the 22 cancelled or "
+         "suspended GSTINs) and lets owners without a GSTIN start with their Udyam number. Privacy follows the DPDP "
+         "Act: consent per purpose, lookup before upload, masking, and short retention. The prototype runs in "
+         "Voiceflow today; WhatsApp and voice are channels of the same agent.")
 
 # ============ SLIDE 6 — COMPETITIVE ANALYSIS ============
 s = new_content_slide()
@@ -517,7 +522,7 @@ header(s, "05", "Competitive analysis",
        "with a zero-wait journey")
 crit = ["Full stack on one bill", "Needs-based advice", "Instant, clear price", "Paperless KYC",
         "Regional languages", "Self-serve tracking", "On-ground install network"]
-players = [("Saathi (proposed)", "Accel Business", [2, 2, 2, 2, 2, 2, 2]),
+players = [("Saathi (prototype)", "Accel Business", [2, 2, 2, 2, 2, 2, 2]),
            ("Accel Business today", "field sales, one product at a time", [1, 0, 0, 0, 1, 0, 2]),
            ("JioBusiness", "7 fixed tiers from ₹901/mo (2021 launch)", [2, 0, 2, 1, 1, 1, 2]),
            ("Vi Business", "ReadyForNext self-assessment", [1, 1, 1, 0, 0, 0, 1]),
@@ -656,9 +661,9 @@ RX, RW = 6.55, 3.0
 rect(s, RX, PHY, RW, PHH, fill=PANEL, radius=0.07)
 text(s, RX + 0.12, PHY + 0.06, RW - 0.24, 0.2, "Key risks → mitigation", size=7.4, font=FS)
 risks = [("GenAI mis-sells → ", "rules engine, not the LLM, sets price and eligibility; every answer logged"),
-         ("Channel conflict → ", "partner QR attribution + commission"),
+         ("Channel conflict → ", "referral codes credit the partner; paid after 90 days"),
          ("KYC fraud → ", "registry lookups, cross-checks, e-Sign, review queue"),
-         ("Fibre not feasible → ", "5G AirFiber offered at quote time")]
+         ("Costly promises → ", "72 h only where data supports it: ₹93L → ₹52L credits per 1,000 orders")]
 text(s, RX + 0.12, PHY + 0.29, RW - 0.24, 0.84,
      [{"runs": [(a, {"font": FS, "color": RED}), (b, {})], "sa": 2.5, "ls": 1.0} for a, b in risks],
      size=6, color=INK)

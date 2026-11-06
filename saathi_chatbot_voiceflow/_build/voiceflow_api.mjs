@@ -62,29 +62,31 @@ export async function request(method, apiPath, body, query = {}) {
     url.searchParams.set("environmentAlias", ENVIRONMENT_ALIAS);
   }
   Object.entries(extraQuery).forEach(([key, value]) => url.searchParams.set(key, value));
+  // A FormData body (file upload) sets its own multipart Content-Type; everything else is JSON.
+  const isForm = body instanceof FormData;
+  const headers = { Authorization: "Bearer " + SETTINGS.VF_API_KEY, Accept: "application/json" };
+  if (!isForm) headers["Content-Type"] = "application/json";
   for (let attempt = 0; ; attempt++) {
     const response = await fetch(url, {
       method,
-      headers: {
-        Authorization: "Bearer " + SETTINGS.VF_API_KEY,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      headers,
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
     });
     if (response.status === HTTP_TOO_MANY_REQUESTS && attempt < RATE_LIMIT_RETRIES) {
       await sleep(RATE_LIMIT_WAIT_MS * (attempt + 1));
       continue;
     }
     const text = await response.text();
-    let parsed = null;
+    let parsed;
     try {
       parsed = text ? JSON.parse(text) : null;
     } catch {
       parsed = { raw: text.slice(0, 500) };
     }
     if (!response.ok) {
-      const error = new Error(`${method} ${apiPath} → HTTP ${response.status}: ${JSON.stringify(parsed).slice(0, 800)}`);
+      const error = new Error(
+        `${method} ${apiPath} → HTTP ${response.status}: ${JSON.stringify(parsed).slice(0, 800)}`,
+      );
       error.status = response.status;
       error.body = parsed;
       throw error;

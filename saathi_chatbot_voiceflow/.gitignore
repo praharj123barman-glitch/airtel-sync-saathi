@@ -1,4 +1,4 @@
-# Secrets: the Voiceflow API key lives only here (see START_HERE.md, "Build by API").
+# Secrets: the Voiceflow API key lives only in .env (read by _build/voiceflow_api.mjs, never printed).
 .env
 .env.*
 
